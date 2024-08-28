@@ -5,25 +5,22 @@
 #include <SDL_timer.h>
 #include <cmath>
 #include <glm/ext.hpp>
-// #define GLM_ENABLE_EXPERIMENTAL
 
 #include "ecs/Components/TransformComponent.h"
 #include "ecs/System.h"
 #include "ecs/World.h"
 #include "services/InputService.h"
-// #include <glm/glm.hpp>
-// #include <glm/gtc/quaternion.hpp>
-// #include <glm/gtx/matrix_decompose.hpp>
-// #include <glm/gtx/string_cast.hpp>
+#include <glm/ext/quaternion_common.hpp>
+#include <glm/fwd.hpp>
 #include <glm/vec3.hpp>
 #include <memory>
 
 namespace Systems {
-class MoveSystem : public Ecs::System {
+class RotateCameraSystem : public Ecs::System {
   public:
     std::shared_ptr<CoreService::InputService> inputService;
-    MoveSystem() {}
-    ~MoveSystem() {}
+    RotateCameraSystem() {}
+    ~RotateCameraSystem() {}
     float yaw = 90.0f;
     float pitch = 0.0f;
     float lastX = 0.0f;
@@ -31,6 +28,7 @@ class MoveSystem : public Ecs::System {
     bool isFirst = true;
 
     void Init() override {
+
         inputService = std::static_pointer_cast<CoreService::InputService>(Core::DiCore::GetObject(Core::DIObjects::InputService));
         std::cout << inputService->GetMousePosition().x << std::endl;
     }
@@ -38,10 +36,10 @@ class MoveSystem : public Ecs::System {
     float dir = 1.0f;
     void Update(float deltaTime) override {
         auto pool = m_World->GetPoolComponent<Components::Transform>();
-        auto pool2 = m_World->GetPoolComponent<Components::CameraComponent>();
+        auto pool2 = m_World->GetPoolComponent<Components::Transform>();
         for (auto ent : pool2) {
-            auto camera = m_World->GetComponent<Components::CameraComponent>(ent);
-            auto position = camera->GetPosition();
+            auto camera = m_World->GetComponent<Components::Transform>(ent);
+            auto position = camera->Position();
             if (isFirst) {
                 lastX = inputService->GetMousePosition().x;
                 lastY = inputService->GetMousePosition().y;
@@ -64,9 +62,9 @@ class MoveSystem : public Ecs::System {
             if (pitch < -89.0f)
                 pitch = -89.0f;
 
-            auto dir = glm::normalize(glm::vec3(cos(glm::radians(yaw)) * cos(glm::radians(pitch)), sin(glm::radians(pitch)),
-                                                -sin(glm::radians(yaw)) * cos(glm::radians(pitch))));
-            // auto speed = 2;
+            // auto dir = glm::normalize(glm::vec3(cos(glm::radians(yaw)) * cos(glm::radians(pitch)), sin(glm::radians(pitch)),
+            // -sin(glm::radians(yaw)) * cos(glm::radians(pitch))));
+            auto dir = glm::vec3(0.0f, 0.0f, 1.0f);
             if (inputService->GetValueAction(CoreService::InputAction::UP)) {
                 position += 10.0f * dir * deltaTime;
             }
@@ -74,16 +72,16 @@ class MoveSystem : public Ecs::System {
                 position -= 10.0f * dir * deltaTime;
             }
             if (inputService->GetValueAction(CoreService::InputAction::RIGHT)) {
-                position += glm::normalize(glm::cross(dir, glm::vec3(0, 1, 0))) * 10.0f * deltaTime;
+                position -= 10.0f * deltaTime * camera->Right(); // glm::normalize(glm::cross(dir, glm::vec3(0, 1, 0))) * 10.0f * deltaTime;
             }
             if (inputService->GetValueAction(CoreService::InputAction::LEFT)) {
-                position -= glm::normalize(glm::cross(dir, glm::vec3(0, 1, 0))) * 10.0f * deltaTime;
+                position += 10.0f * deltaTime * camera->Right(); // glm::normalize(glm::cross(dir, glm::vec3(0, 1, 0))) * 10.0f * deltaTime;
             }
             // if (position.z > 10) {
-            //   dir = 1;
+            //     dir = 1;
             // }
             // if (position.z <= -10.0f) {
-            //   dir = -1;
+            //     dir = -1;
             // }
             // auto direction = glm::vec3(0.0f, 0.0f, -1.0f);
             // auto target = glm::rotate(direction, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -91,8 +89,9 @@ class MoveSystem : public Ecs::System {
             // cos(SDL_GetTicks64() / 20 * deltaTime) * 5;
             // position.x = sin(SDL_GetTicks64() / 20 * deltaTime) * 5;
             // position.y = sin(SDL_GetTicks64() / 20 * deltaTime) * 5;
-            // std::cout << position.z << std::endl;
-            camera->SetPositionAndTarget(position, position + dir);
+            // std::cout << glm::to_string(position) << std::endl;
+            // camera->SetPositionAndTarget(position, position + dir);
+            camera->SetPosition(position);
         }
         // std::cout << "befor move "  <<  SDL_GetTicks64() << std::endl;
         // for (int i = 0; i < std::numeric_limits<int>::max() / 2; i++) {

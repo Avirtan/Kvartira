@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(game VERSION 0.1.0 LANGUAGES C CXX)
+project(game VERSION 2.1.0 LANGUAGES C CXX)
 
 # set(CMAKE_CXX_STANDARD 20)
 
@@ -10,10 +10,14 @@ project(game VERSION 0.1.0 LANGUAGES C CXX)
 
 # поиск библиотек
 
+# message()
+# message(${game_VERSION_MAJOR})
 
 set(MySourcesList "./src/main.cpp")
 
-file(GLOB Manager "./include/managers/*.cpp" "./include/managers/*.hpp")
+file(GLOB Manager "./include/managers/*.cpp" "./include/managers/*.h")
+file(GLOB Systems "./include/systems/*.cpp" "./include/systems/*.h")
+
 # file(GLOB Render "./include/render/*.cpp" "./include/render/*.hpp")
 # file(GLOB Actors "./include/actors/*.cpp" "./include/actors/*.hpp")
 # file(GLOB Components "./include/components/*.cpp" "./include/components/*.hpp")
@@ -21,7 +25,7 @@ file(GLOB Manager "./include/managers/*.cpp" "./include/managers/*.hpp")
 # file(GLOB Utils "./include/utils/*.cpp" "./include/utils/*.hpp")
 
 list(APPEND MySourcesList ${Manager})
-# list(APPEND MySourcesList ${Actors})
+list(APPEND MySourcesList ${Systems})
 # list(APPEND MySourcesList ${Components})
 # list(APPEND MySourcesList ${Ai})
 # list(APPEND MySourcesList ${Render})
@@ -57,4 +61,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE $<IF:$<TARGET_EXISTS:SDL2_image::S
 target_link_libraries(${PROJECT_NAME} PRIVATE soil2)
 
 add_compile_definitions(GLEW_NO_GLU)
-
+add_compile_definitions(GLM_ENABLE_EXPERIMENTAL)
+# add_compile_definitions(TEST=${game_VERSION_MAJOR})
+if(APPLE) 
+    
+else()
+add_compile_definitions(USE_OPENGL)
+endif()

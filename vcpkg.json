@@ -3,15 +3,13 @@
     "glew",
     {
       "name": "imgui",
-      "features": [
-        "opengl3-binding",
-        "sdl2-binding"
-      ]
+      "features": ["opengl3-binding", "sdl2-binding"]
     },
     "sdl2",
     "sdl2-image",
     "soil2",
     "spdlog",
-    "glm"
+    "glm",
+    "rapidjson"
   ]
 }

@@ -1,13 +1,16 @@
 set(MySourcesList)
 set(CMAKE_CXX_STANDARD 20)
 
-file(GLOB RENDER "render/*.cpp" "render/*.h")
+if(APPLE) 
+    
+else()
 file(GLOB ARRAY "render/vertexArray/*.cpp" "render/vertexArray/*.h")
+file(GLOB MESH "render/mesh/*.cpp" "render/mesh/*.h")
 file(GLOB SHADER "render/shader/*.cpp" "render/shader/*.h")
 file(GLOB OBJECT "render/object/*.cpp" "render/object/*.h")
 file(GLOB TEXTURE "render/texture/*.cpp" "render/texture/*.h")
-file(GLOB ACTOR "actors/*.cpp" "actors/*.h")
-file(GLOB COMPONENT "components/*.cpp" "components/*.h")
+endif()
+
 file(GLOB SERVICE "services/*.cpp" "services/*.h")
 file(GLOB DI "di/*.cpp" "di/*.h")
 file(GLOB ECS "ecs/*.cpp" "ecs/*.h")
@@ -15,13 +18,17 @@ file(GLOB ECS "ecs/*.cpp" "ecs/*.h")
 list(APPEND MySourcesList ${ECS})
 list(APPEND MySourcesList ${DI})
 list(APPEND MySourcesList ${SERVICE})
+
+if(APPLE) 
+
+else()
 list(APPEND MySourcesList ${ARRAY})
-list(APPEND MySourcesList ${RENDER})
 list(APPEND MySourcesList ${SHADER})
 list(APPEND MySourcesList ${OBJECT})
 list(APPEND MySourcesList ${TEXTURE})
-list(APPEND MySourcesList ${COMPONENT})
-list(APPEND MySourcesList ${ACTOR})
+list(APPEND MySourcesList ${MESH})
+endif()
+
 
 add_library(core STATIC ${MySourcesList})
 target_include_directories(core PUBLIC "./")

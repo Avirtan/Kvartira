@@ -1,22 +1,31 @@
 #pragma once
 #include "render/shader/Shader.h"
+#include "render/texture/Texture.h"
 #include "render/vertexArray/VertexArray.h"
-#include <GL/glew.h>
-#include <glm/glm.hpp>
 #include <memory>
+#include <vector>
 
 namespace Core {
 class Mesh {
-public:
-  Mesh(const std::shared_ptr<Core::VertexArray> &Vao,
-       const std::shared_ptr<Core::Shader> &Shader);
-  ~Mesh();
-  void Draw();
+  public:
+    Mesh(std::shared_ptr<Core::VertexArray> &array, std::vector<std::shared_ptr<Core::Texture>> &textures, std::shared_ptr<Core::Shader> &shader);
+    ~Mesh();
 
-  std::shared_ptr<Core::Shader> GetShader() const { return m_Shader; }
+    // bool Load(const std::string &fileName);
 
-protected:
-  std::shared_ptr<Core::VertexArray> m_Vao;
-  std::shared_ptr<Core::Shader> m_Shader;
+    std::shared_ptr<VertexArray> &GetVertexArray() { return m_VertexArray; }
+    std::shared_ptr<Core::Texture> GetTexture(size_t index);
+    const std::shared_ptr<Core::Shader> &GetShader() const { return m_Shader; }
+
+    float GetRadius() const { return mRadius; }
+    float GetSpecPower() const { return mSpecPower; }
+
+  private:
+    std::vector<std::shared_ptr<Core::Texture>> m_Textures;
+    std::shared_ptr<VertexArray> m_VertexArray;
+    std::shared_ptr<Core::Shader> m_Shader;
+
+    float mRadius;
+    float mSpecPower;
 };
 } // namespace Core

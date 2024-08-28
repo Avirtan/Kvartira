@@ -6,17 +6,15 @@
 namespace Core {
 Texture::Texture() : mTextureID(0), mWidth(0), mHeight(0) {}
 
-Texture::~Texture() {}
+Texture::~Texture() { Unload(); }
 
 bool Texture::Load(const std::string &fileName) {
   int channels = 0;
 
-  unsigned char *image = SOIL_load_image(fileName.c_str(), &mWidth, &mHeight,
-                                         &channels, SOIL_LOAD_AUTO);
+  unsigned char *image = SOIL_load_image(fileName.c_str(), &mWidth, &mHeight, &channels, SOIL_LOAD_AUTO);
 
   if (image == nullptr) {
-    SDL_Log("SOIL failed to load image %s: %s", fileName.c_str(),
-            SOIL_last_result());
+    SDL_Log("SOIL failed to load image %s: %s", fileName.c_str(), SOIL_last_result());
     return false;
   }
 
@@ -28,8 +26,7 @@ bool Texture::Load(const std::string &fileName) {
   glGenTextures(1, &mTextureID);
   glBindTexture(GL_TEXTURE_2D, mTextureID);
 
-  glTexImage2D(GL_TEXTURE_2D, 0, format, mWidth, mHeight, 0, format,
-               GL_UNSIGNED_BYTE, image);
+  glTexImage2D(GL_TEXTURE_2D, 0, format, mWidth, mHeight, 0, format, GL_UNSIGNED_BYTE, image);
 
   SOIL_free_image_data(image);
 

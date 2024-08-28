@@ -1,8 +1,8 @@
 #pragma once
+// #define GLEW_NO_GLU
 #include "./SDL.h"
-#include "actors/Actor.h"
 #include "ecs/World.h"
-#include "render/Render.h"
+#include "services/InputService.h"
 #include <SDL_events.h>
 #include <memory>
 #include <vector>
@@ -10,31 +10,29 @@
 namespace Managers {
 
 class GameManager {
-public:
-  GameManager();
-  bool Init();
-  bool InitRender();
-  void Run();
+  public:
+    GameManager();
+    bool Init();
+    void Run();
 
-  ~GameManager();
+    ~GameManager() {}
 
-private:
-  void ProcessInput();
-  void UpdateGame();
-  void GenerateOutput();
-  void CreateSystem();
+  private:
+    void ProcessInput();
+    void UpdateGame();
+    void CreateSystem();
+    void CreateService();
 
-  void LoadData();
+    void LoadData();
 
-  bool mIsRunning;
+    bool mIsRunning;
 
-  Uint64 mTicksCount;
+    Uint64 mTicksCount;
 
-  std::unique_ptr<Core::Render> mRender;
-  SDL_Window *m_Window;
-  SDL_GLContext m_Context;
+    SDL_Window *m_Window;
+    SDL_GLContext m_Context;
 
-  std::shared_ptr<Ecs::World> m_World;
-  // std::vector<std::unique_ptr<Core::Actor>> m_Actors;
+    std::shared_ptr<CoreService::InputService> m_InputeService;
+    std::shared_ptr<Ecs::World> m_World;
 };
 } // namespace Managers

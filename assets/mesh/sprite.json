@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "shader_vert": "./shaders/Sprite.vert",
+  "shader_frag": "./shaders/Sprite.frag",
+  "textures": ["./assets/Plane.png"],
+  "vertices": [
+    [-0.5, 0.5, 0, 0, 0, 0, 0, 0],
+    [0.5, 0.5, 0, 0, 0, 0, 1, 0],
+    [0.5, -0.5, 0, 0, 0, 0, 1, 1],
+    [-0.5, -0.5, 0, 0, 0, 0, 0, 1]
+  ],
+  "indices": [
+    [0, 1, 2],
+    [2, 3, 0]
+  ]
+}

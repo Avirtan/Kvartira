@@ -18,14 +18,15 @@ public:
   VertexArray();
   ~VertexArray();
   void SetVertexBuffer(const VertexAttributeData *data, int count);
-  void SetElementBuffer(const void *indices, int count,
-                        int sizeElement = sizeof(GLuint));
+  void SetElementBuffer(const void *indices, int count, int sizeElement = sizeof(GLuint));
 
+  std::uint8_t GetCountIndex() const { return m_CountIndex; }
   void SetActive();
 
 private:
   GLuint mIndexArray;
   GLuint mIndexElementBuffer;
   GLuint mIndexVertexBuffer;
+  std::uint8_t m_CountIndex;
 };
 } // namespace Core
