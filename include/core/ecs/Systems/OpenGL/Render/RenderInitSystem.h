@@ -25,17 +25,13 @@ class RenderInitSystem : public Ecs::System {
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)1024 / 768, 0.1f, 100.0f);
 
         auto cameraComponent = std::make_shared<Components::CameraComponent>(Components::CameraComponent(projection));
-        auto transformComponent = std::make_shared<Components::Transform>(Components::Transform());
 
         auto position = glm::vec3(0.0f, 0.0f, 8.0f);
-        auto dir = glm::normalize(glm::vec3(glm::cos(glm::radians(90.0f)), 0.0f, -glm::sin(glm::radians(90.0f))));
-        // std::cout << glm::to_string(dir) << std::endl;
-        transformComponent->SetPositionCamera(position);
-        auto target = position + dir; // glm::vec3(glm::cos(glm::radians(0.0f)), 0.0f, -glm::sin(glm::radians(0.0f)));
-        cameraComponent->SetPositionAndTarget(position, target);
+        auto dir = glm::vec3(0.0f, 0.0f, -1.0f);
+        cameraComponent->SetPosition(position);
+        cameraComponent->SetDirection(dir);
         auto entityCamera = m_World->CreateEntity();
         m_World->AddComponent<Components::CameraComponent>(entityCamera, cameraComponent);
-        m_World->AddComponent<Components::Transform>(entityCamera, transformComponent);
 
         auto renderComponent = std::make_shared<Components::RenderComponent>(Components::RenderComponent(m_Window, m_Context));
         auto entity = m_World->CreateEntity();

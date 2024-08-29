@@ -28,6 +28,12 @@ struct Transform : public Ecs::Component {
     void SetPositionCamera(glm::vec3 &position) { m_Position = -position; }
 
     void SetRotation(glm::fquat &rotation) { m_Rotation = rotation; }
+
+    void SetRotateAxis(float angle, glm::vec3 axis) {
+        glm::fquat rot = glm::normalize(glm::angleAxis(angle, axis));
+        m_Rotation = rot;
+    }
+
     void RotateAxis(float angle, glm::vec3 &axis) {
         glm::fquat rot = glm::normalize(glm::angleAxis(angle, axis));
         m_Rotation = m_Rotation * rot;

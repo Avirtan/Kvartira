@@ -22,7 +22,9 @@
 #include <memory>
 #include <string>
 
+#include "../systems/MoveCameraSystem.h"
 #include "../systems/RotateCameraSystem.h"
+
 #include "di/DICore.h"
 #include "ecs/Components/OpenGL/Mesh/MeshComponent.h"
 #include "ecs/Components/TransformComponent.h"
@@ -89,8 +91,11 @@ void GameManager::CreateSystem() {
     auto renderMesh3DSystem = std::make_shared<RenderSystems::RenderMesh3D>(RenderSystems::RenderMesh3D());
     m_World->AddSystem<RenderSystems::RenderMesh3D>(renderMesh3DSystem);
 
-    auto moveSystem = std::make_shared<Systems::RotateCameraSystem>();
-    m_World->AddSystem<Systems::RotateCameraSystem>(moveSystem);
+    auto rotateCameraSystem = std::make_shared<Systems::RotateCameraSystem>();
+    m_World->AddSystem<Systems::RotateCameraSystem>(rotateCameraSystem);
+
+    auto moveCameraSystem = std::make_shared<Systems::MoveCameraSystem>();
+    m_World->AddSystem<Systems::MoveCameraSystem>(moveCameraSystem);
 }
 
 void GameManager::CreateService() {
@@ -213,7 +218,7 @@ void GameManager::LoadData() {
     // auto m1 = glm::translate(transform->GetMatrix(), glm::vec3(1.0f, -1.0f, 0.0f));
     // m1 = glm::rotate(m1, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     // transform->SetMatrix(m1);
-    transform->RotateYawY(glm::radians(15.0f));
+    transform->RotateYawY(glm::radians(0.0f));
     // std::cout << glm::to_string(transform->GetMatrix()) << std::endl;
 
     // std::cout << glm::to_string(transform->Right()) << std::endl;

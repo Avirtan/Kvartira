@@ -92,7 +92,9 @@ class MoveSystem : public Ecs::System {
             // position.x = sin(SDL_GetTicks64() / 20 * deltaTime) * 5;
             // position.y = sin(SDL_GetTicks64() / 20 * deltaTime) * 5;
             // std::cout << position.z << std::endl;
-            camera->SetPositionAndTarget(position, position + dir);
+            // camera->SetPositionAndTarget(position, position + dir);
+            // camera->SetPosition(position);
+            // camera->SetTarget(target);
         }
         // std::cout << "befor move "  <<  SDL_GetTicks64() << std::endl;
         // for (int i = 0; i < std::numeric_limits<int>::max() / 2; i++) {

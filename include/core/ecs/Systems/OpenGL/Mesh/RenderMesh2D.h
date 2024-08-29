@@ -25,7 +25,7 @@ class RenderMesh2D : public Ecs::System {
         glm::mat4 matrixVP;
         for (auto ent : poolCamera) {
             auto camera = m_World->GetComponent<Components::CameraComponent>(ent);
-            matrixVP = camera->GetVP();
+            matrixVP = camera->GetMatrixVP();
         }
         if (poolMesh2d.size() > 0) {
             for (auto _ : pool) {

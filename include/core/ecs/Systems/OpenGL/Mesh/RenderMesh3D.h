@@ -30,16 +30,13 @@ class RenderMesh3D : public Ecs::System {
     void Update(float deltaTime) override {
         auto pool = m_World->GetPoolComponent<Components::RenderComponent>();
         auto poolMesh2d = m_World->GetPoolComponent<Components::MeshComponent3D, Components::Transform>();
-        auto poolCamera = m_World->GetPoolComponent<Components::CameraComponent, Components::Transform>();
+        auto poolCamera = m_World->GetPoolComponent<Components::CameraComponent>();
         time += deltaTime;
         glm::mat4 matrixVP;
         glm::vec3 positionCamera;
         for (auto ent : poolCamera) {
             auto camera = m_World->GetComponent<Components::CameraComponent>(ent);
-            auto transform = m_World->GetComponent<Components::Transform>(ent);
-            // std::cout << glm::to_string() << std::endl;
-            matrixVP = camera->m_Projection * transform->GetMatrixCamera(); // camera->GetVP();
-            // positionCamera = camera->Position();
+            matrixVP = camera->GetMatrixVP();
         }
         if (poolMesh2d.size() > 0) {
             for (auto _ : pool) {
@@ -108,7 +105,7 @@ class RenderMesh3D : public Ecs::System {
                     auto position = transform->Position();
 
                     position += transform->Forward() * deltaTime;
-                    transform->SetPosition(position);
+                    // transform->SetPosition(position);
                     // std::cout << glm::to_string(transform->GetMatrix()) << std::endl;
                     mesh->Shader->SetActive();
                     mesh->Shader->SetMatrixUniform("uWorldTransform", matrixVP * transform->GetMatrix());
