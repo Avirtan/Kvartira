@@ -42,6 +42,7 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 # target_precompile_headers(${PROJECT_NAME} PRIVATE "./includes/objects/Component.hpp" "./includes/objects/Actor.hpp")
 
 add_subdirectory("./include/core")
+target_link_libraries(${PROJECT_NAME} PUBLIC core)
 
 # связывание библиотек
 find_package(imgui CONFIG REQUIRED)

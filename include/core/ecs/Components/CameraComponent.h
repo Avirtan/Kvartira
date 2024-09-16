@@ -1,14 +1,10 @@
 #pragma once
 
 #include "ecs/Component.h"
-#include "ecs/Components/TransformComponent.h"
-#include "render/shader/Shader.h"
-#include "render/vertexArray/VertexArray.h"
 #include <glm/ext.hpp>
 #include <glm/ext/matrix_float4x4.hpp>
 #include <glm/ext/vector_float3.hpp>
 #include <glm/gtc/matrix_access.hpp>
-#include <memory>
 
 namespace Components {
 struct CameraComponent : public Ecs::Component {

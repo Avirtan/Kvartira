@@ -38,6 +38,8 @@ class RenderMesh3D : public Ecs::System {
             auto camera = m_World->GetComponent<Components::CameraComponent>(ent);
             matrixVP = camera->GetMatrixVP();
         }
+        int i = 0;
+        std::cout << poolMesh2d.size() << std::endl;
         if (poolMesh2d.size() > 0) {
             for (auto _ : pool) {
                 glEnable(GL_DEPTH_TEST);
@@ -55,7 +57,8 @@ class RenderMesh3D : public Ecs::System {
                     // auto forwardCamera = transform->GetMatrix() * glm::vec4(matrixVP[0][2], matrixVP[1][2], matrixVP[2][2], 1);
                     auto dir = positionCamera;
                     // std::cout << std::endl;
-
+                    auto axis = glm::vec3(0.0f, 1.0f, 0.0f);
+                    transform->RotateAxis(glm::radians(10.0f), axis);
                     float cosTheta = dot(forward, glm::normalize(dir));
                     float cosTheta1 = dot(right, glm::normalize(dir));
 
@@ -104,7 +107,15 @@ class RenderMesh3D : public Ecs::System {
                     }
                     auto position = transform->Position();
 
-                    position += transform->Forward() * deltaTime;
+                    // position += transform->Forward() * deltaTime;
+                    i++;
+                    if (i == 1002) {
+                        // std::cout << position << std::endl;
+                        // if (position.y < 10) {
+                        //     position = position + transform->Up();
+                        //     transform->SetPosition(position);
+                        // }
+                    }
                     // transform->SetPosition(position);
                     // std::cout << glm::to_string(transform->GetMatrix()) << std::endl;
                     mesh->Shader->SetActive();

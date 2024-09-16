@@ -26,7 +26,6 @@ class MoveCameraSystem : public Ecs::System {
         inputService = std::static_pointer_cast<CoreService::InputService>(Core::DiCore::GetObject(Core::DIObjects::InputService));
     }
 
-    float dir = 1.0f;
     void Update(float deltaTime) override {
         auto pool = m_World->GetPoolComponent<Components::CameraComponent>();
         for (auto ent : pool) {

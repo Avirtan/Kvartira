@@ -9,15 +9,20 @@ file(GLOB MESH "render/mesh/*.cpp" "render/mesh/*.h")
 file(GLOB SHADER "render/shader/*.cpp" "render/shader/*.h")
 file(GLOB OBJECT "render/object/*.cpp" "render/object/*.h")
 file(GLOB TEXTURE "render/texture/*.cpp" "render/texture/*.h")
+file(GLOB AUDIO "audio/*.cpp" "audio/*.h")
 endif()
 
 file(GLOB SERVICE "services/*.cpp" "services/*.h")
 file(GLOB DI "di/*.cpp" "di/*.h")
 file(GLOB ECS "ecs/*.cpp" "ecs/*.h")
+file(GLOB Utils "utils/*.cpp" "utils/*.h")
+file(GLOB Models "models/*/*.cpp" "models/*/*.h")
 
 list(APPEND MySourcesList ${ECS})
 list(APPEND MySourcesList ${DI})
 list(APPEND MySourcesList ${SERVICE})
+list(APPEND MySourcesList ${Utils})
+list(APPEND MySourcesList ${Models})
 
 if(APPLE) 
 
@@ -27,6 +32,7 @@ list(APPEND MySourcesList ${SHADER})
 list(APPEND MySourcesList ${OBJECT})
 list(APPEND MySourcesList ${TEXTURE})
 list(APPEND MySourcesList ${MESH})
+list(APPEND MySourcesList ${AUDIO})
 endif()
 
 
@@ -40,6 +46,13 @@ target_link_libraries(core PRIVATE glm::glm)
 target_link_libraries(core PRIVATE SDL2::SDL2)
 target_link_libraries(core PRIVATE GLEW::GLEW)
 
+if(UNIX AND NOT APPLE)
+    target_include_directories(core PUBLIC "./audio/linux/core/inc")
+    target_include_directories(core PUBLIC "./audio/linux/studio/inc")
+    target_link_directories(core PUBLIC "./audio/linux/core/lib/x86_64")
+    target_link_directories(core PUBLIC "./audio/linux/studio/lib/x86_64")
+    target_link_libraries(core PRIVATE fmodstudioL)
+    target_link_libraries(core PRIVATE fmodL)
+endif()
 
-target_link_libraries(${PROJECT_NAME} PUBLIC core)
 add_compile_definitions(GLEW_NO_GLU)

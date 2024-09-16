@@ -15,8 +15,6 @@ struct Transform : public Ecs::Component {
 
     glm::mat4 GetMatrix() { return positionMatrix() * rotateMatrix() * scaleMatrix(); }
 
-    glm::mat4 GetMatrixCamera() { return rotateMatrix() * positionMatrix(); }
-
     void SetMatrix(glm::mat4 &matrix) { m_Matrix = matrix; }
 
     glm::vec3 Right() { return glm::column(rotateMatrix(), 0); }
@@ -25,7 +23,6 @@ struct Transform : public Ecs::Component {
 
     glm::vec3 &Position() { return m_Position; }
     void SetPosition(glm::vec3 &position) { m_Position = position; }
-    void SetPositionCamera(glm::vec3 &position) { m_Position = -position; }
 
     void SetRotation(glm::fquat &rotation) { m_Rotation = rotation; }
 

@@ -20,7 +20,6 @@ class RenderInitSystem : public Ecs::System {
     ~RenderInitSystem() {}
 
     void Init() override {
-
         InitRender();
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)1024 / 768, 0.1f, 100.0f);
 
@@ -33,7 +32,8 @@ class RenderInitSystem : public Ecs::System {
         auto entityCamera = m_World->CreateEntity();
         m_World->AddComponent<Components::CameraComponent>(entityCamera, cameraComponent);
 
-        auto renderComponent = std::make_shared<Components::RenderComponent>(Components::RenderComponent(m_Window, m_Context));
+        auto renderComponent =
+            std::make_shared<Components::RenderComponent>(Components::RenderComponent(m_Window, m_Context));
         auto entity = m_World->CreateEntity();
         m_World->AddComponent<Components::RenderComponent>(entity, renderComponent);
     }

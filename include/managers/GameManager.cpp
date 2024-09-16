@@ -25,6 +25,7 @@
 #include "../systems/MoveCameraSystem.h"
 #include "../systems/RotateCameraSystem.h"
 
+#include "audio/AudioSystem.h"
 #include "di/DICore.h"
 #include "ecs/Components/OpenGL/Mesh/MeshComponent.h"
 #include "ecs/Components/TransformComponent.h"
@@ -53,9 +54,12 @@ bool GameManager::Init() {
         return false;
     }
 
+    auto a = new Audio::AudioSystem();
+
     int screenWidth = 1024;
     int screenHeight = 768;
-    SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+    SDL_WindowFlags window_flags =
+        (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
 
     m_Window = SDL_CreateWindow("kvrtira", 0, 0, screenWidth, screenHeight, window_flags);
     if (!m_Window) {
@@ -79,7 +83,8 @@ bool GameManager::Init() {
 void GameManager::CreateSystem() {
     m_World = std::make_shared<Ecs::World>(Ecs::World());
 
-    auto renderInitSystem = std::make_shared<RenderSystems::RenderInitSystem>(RenderSystems::RenderInitSystem(m_Window));
+    auto renderInitSystem =
+        std::make_shared<RenderSystems::RenderInitSystem>(RenderSystems::RenderInitSystem(m_Window));
     m_World->AddSystem<RenderSystems::RenderInitSystem>(renderInitSystem);
 
     auto renderSwapSystem = std::make_shared<RenderSystems::RenderSwapSystem>(RenderSystems::RenderSwapSystem());
@@ -165,8 +170,8 @@ void GameManager::ProcessInput() {
 }
 
 void GameManager::UpdateGame() {
-    while (!SDL_TICKS_PASSED(SDL_GetTicks64(), mTicksCount + 33))
-        ;
+    // while (!SDL_TICKS_PASSED(SDL_GetTicks64(), mTicksCount + 33))
+    //     ;
 
     float deltaTime = (SDL_GetTicks64() - mTicksCount) / 1000.0f;
     if (deltaTime > 0.05f) {
@@ -189,7 +194,8 @@ void GameManager::LoadData() {
     std::string pathMesh = "./assets/mesh/3dCube.json";
     // std::string pathMesh = "./assets/mesh/sprite.json";
 
-    auto r = std::static_pointer_cast<CoreService::ResourcesService>(Core::DiCore::GetObject(Core::DIObjects::ResourcesService));
+    auto r = std::static_pointer_cast<CoreService::ResourcesService>(
+        Core::DiCore::GetObject(Core::DIObjects::ResourcesService));
 
     // auto shader = r->GetShader(path, path1);
     // auto texture = r->GetTexture(pathT);
@@ -210,35 +216,40 @@ void GameManager::LoadData() {
     // vao->SetVertexBuffer(data, 4);
     // vao->SetElementBuffer(indices, 6);
 
-    auto mesh = r->GetMesh(pathMesh);
-    auto entity = m_World->CreateEntity();
-    auto component = std::make_shared<Components::MeshComponent3D>(mesh);
-    m_World->AddComponent<Components::MeshComponent3D>(entity, component);
-    auto transform = std::make_shared<Components::Transform>();
-    // auto m1 = glm::translate(transform->GetMatrix(), glm::vec3(1.0f, -1.0f, 0.0f));
-    // m1 = glm::rotate(m1, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    // transform->SetMatrix(m1);
-    transform->RotateYawY(glm::radians(0.0f));
-    // std::cout << glm::to_string(transform->GetMatrix()) << std::endl;
+    for (int j = 0; j < 2; j++) {
+        for (int i = 0; i < 2; i++) {
+            auto mesh = r->GetMesh(pathMesh);
+            auto entity = m_World->CreateEntity();
+            auto component = std::make_shared<Components::MeshComponent3D>(mesh);
+            m_World->AddComponent<Components::MeshComponent3D>(entity, component);
+            auto transform = std::make_shared<Components::Transform>();
+            // auto m1 = glm::translate(transform->GetMatrix(), glm::vec3(1.0f, -1.0f, 0.0f));
+            // m1 = glm::rotate(m1, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            // transform->SetMatrix(m1);
 
-    // std::cout << glm::to_string(transform->Right()) << std::endl;
-    auto position = glm::vec3(0.0f, 0.0f, 0.0f);
-    // position += transform->Forward() * 4;
-    transform->SetPosition(position);
-    // std::cout << glm::to_string(position) << std::endl;
-
-    m_World->AddComponent<Components::Transform>(entity, transform);
+            transform->RotateYawY(glm::radians(0.0f));
+            // if (j > 10) {
+            //     auto position = glm::vec3(i, 2, j + 0.5);
+            //     transform->SetPosition(position);
+            // } else {
+            // }
+            auto position = glm::vec3(i % 2 == 0 ? i + 1 : i + 2, 0.0f, j);
+            transform->SetPosition(position);
+            m_World->AddComponent<Components::Transform>(entity, transform);
+        }
+        // std::cout << j << std::endl;
+    }
     // std::cout << glm::to_string(transform->GetMatrix()) << std::endl;
     // std::cout << glm::to_string(transform->GetMatrix()[0]) << std::endl;
     // std::cout << glm::to_string(glm::row(transform->GetMatrix(), 2)) << std::endl;
-    // std::cout << glm::to_string(glm::vec3(transform->GetMatrix()[0][2], transform->GetMatrix()[1][2], transform->GetMatrix()[2][2])) << std::endl;
-    // std::cout << glm::to_string(glm::column(transform->GetMatrix(), 3)) << std::endl;
+    // std::cout << glm::to_string(glm::vec3(transform->GetMatrix()[0][2], transform->GetMatrix()[1][2],
+    // transform->GetMatrix()[2][2])) << std::endl; std::cout << glm::to_string(glm::column(transform->GetMatrix(), 3))
+    // << std::endl;
 
     // auto position = glm::vec3(3, 0, 0);
-    // auto m_orientation = glm::angleAxis(glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f)); //;glm::fquat(0.7, 0, 1, 0);
-    // auto rMat = glm::toMat4(m_orientation);
-    // auto forword = glm::vec3(glm::row(rMat, 2));
-    // std::cout << glm::to_string(forword) << std::endl;
+    // auto m_orientation = glm::angleAxis(glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f)); //;glm::fquat(0.7, 0, 1,
+    // 0); auto rMat = glm::toMat4(m_orientation); auto forword = glm::vec3(glm::row(rMat, 2)); std::cout <<
+    // glm::to_string(forword) << std::endl;
 
     // glm::mat4 view = glm::lookAt(position, forword, glm::vec3(0, 1, 0));
     // std::cout << glm::to_string(view) << std::endl;
